@@ -15,8 +15,8 @@
 &emsp;&emsp;在线性回归中，输入和输出呈线性关系，所以假设方程为：
 $$
 \begin{aligned}
-h(\boldsymbol x) &= \theta_0 + \theta_1x_1+...+\theta_nx_n \\
-&=\boldsymbol \theta^T\boldsymbol x
+    h(\boldsymbol x) &= \theta_0 + \theta_1x_1+...+\theta_nx_n \\
+    &=\boldsymbol \theta^T\boldsymbol x
 \end{aligned}
 $$
 &emsp;&emsp;其中 $x_0$ 恒等于 1，被称为偏置项。所以我们希望找到一组参数 $\boldsymbol \theta$ ，使得输入一组输入 $\boldsymbol x$ ，得到的输出 $h(\boldsymbol x)$ 越接近真实的结果越好，即对于训练集中的样本，输入某一个样本 $\boldsymbol x^{(i)}$ ，得到的结果 $h(\boldsymbol x^{(i)})$ 约接近这个样本的标签 $y^{(i)}$ 越好。所以我们训练的目标就是减少这两个值之间的差距，那么很自然的，我们可以想到可以使用二者差值的平方作为误差的度量，记为 $loss(\boldsymbol \theta)$ ，那么某一个样本的误差即为：
