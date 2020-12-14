@@ -287,9 +287,17 @@ $$
 $$
 &emsp;&emsp;由此，我们从概率论出发推导出了我们的求解目标，从中也可以得到我们的损失函数 $J(\boldsymbol \theta) = \frac {1} {2} \sum_{i=1}^m (y^{(i)}-\boldsymbol x^{(i)T} \boldsymbol \theta)^2$ 。 
 
+## 局部加权线性回归 (Locally Weighted Linear Regression)
 
-
-
+&emsp;&emsp;局部加权线性回归根据需要预测的点的位置，未每一个训练集的样本的损失值增加了一个权重 $w$，离预测的点约近的权重越高，加权后，损失函数变为：
+$$
+J(\boldsymbol \theta) = \sum_{i = 1}^mw^{(i)}(y^{(i)} - \boldsymbol x^{(i)T}\boldsymbol \theta)^2
+$$
+&emsp;&emsp;权重的计算方式为：
+$$
+w^{(i)} = \exp(- \frac {(\boldsymbol x^{(i)} - \boldsymbol x)^T(\boldsymbol x^{(i)} - \boldsymbol x)} {2 \tau ^2})
+$$
+&emsp;&emsp;其中 $\boldsymbol x$ 是待预测的点，$\tau$ 是带宽，控制了受影响的范围。局部线性加权回归的思想就是更希望能在预测点周围的拟合情况更好，而不在乎较远的地方，这样依据局部线性的思想可以拟合非线性的曲线。但是每对一个新样本就要计算一次权重，然后才能再计算它的拟合曲线，再去得到结果。
 
 
 
