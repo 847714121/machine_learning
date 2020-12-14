@@ -72,7 +72,7 @@ $$
 $$
 &emsp;&emsp;所以梯度下降的算法就是迭代更新权重，直至收敛。
 
-## 数值求解模型
+## 数学方法求解模型
 
 &emsp;&emsp;上面迭代学习的过程实际是为了求解得到能使 $J(\boldsymbol \theta)$ 最小时的 $\boldsymbol \theta$ ，而事实上，$J(\boldsymbol \theta)$ 是一个只有一个极值点的函数，即求出那个极值点，这个点对应的参数就是 $\boldsymbol \theta$ 的取值，所以我们可以用数学方法来求解，过程和我们数学上求一个函数的最小值点类似。
 
@@ -253,3 +253,55 @@ $$
 \end{aligned}
 $$
 &emsp;&emsp;所以可以得到，当 $\boldsymbol \theta = (\boldsymbol X^T \boldsymbol X)^{-1}\boldsymbol X^Ty $ 时，$J(\boldsymbol \theta)$ 取最小值。需要注意的是 $\boldsymbol X^T \boldsymbol X$ 必须是一个可逆矩阵上面的公式才成立。
+
+## 从概率论上推导线性回归模型
+
+&emsp;&emsp;不管怎么说，直接使用偏差的平方作为损失会让人有一丝不安，接下来从概率论上推导出前面所设定的损失函数，给它补上数学理论的支撑。
+
+&emsp;&emsp;首先，我们需要进行一些假设。我们的第一个假设就是：输出 $y$ 和输入 $\boldsymbol x$  是呈严格的线性关系的，而实际样本可能不是严格在直线上而是在直线附近是因为还有其他因素微弱的影响着 $y$ 的结果。第二个假设就是：那些其他未考虑的因素对 $y$ 的影响我们认为是对 $y$ 加了一个零均值的正态分布的噪声，第三个假设是：数据集中，样本与样本之间是无关的。所以有：
+$$
+y-h_{\boldsymbol \theta} (\boldsymbol x) \sim N(0, \sigma^2)
+$$
+&emsp;&emsp;所以有：
+$$
+p(y-h_{\boldsymbol \theta} (\boldsymbol x)) = \frac {1} {\sqrt {2 \pi} \sigma} \exp(- \frac {(y-h_{\boldsymbol \theta} (\boldsymbol x))^2} {2 \sigma^2})
+$$
+&emsp;&emsp;所以样本数据被采集到的概率 $P$ 为：
+$$
+\begin{aligned}
+p(\boldsymbol y | \boldsymbol X; \boldsymbol \theta) &= \prod_{i=1}^mp(y^{(i)} - h_{\boldsymbol \theta}(\boldsymbol x^{(i)}))  \\
+& = \prod_{i=1}^m \frac {1} {\sqrt {2 \pi} \sigma} \exp(- \frac {(y^{(i)}-\boldsymbol x^{(i)T} \boldsymbol \theta)^2} {2 \sigma^2})
+\end{aligned}
+$$
+&emsp;&emsp;该函数也称为似然函数，记为 $L$ ，因为 $L$ 是关于 $\boldsymbol \theta$ 的函数，所以有：
+$$
+L(\boldsymbol \theta) = p(\boldsymbol y | \boldsymbol X; \boldsymbol \theta) = \prod_{i=1}^m \frac {1} {\sqrt {2 \pi} \sigma} \exp(- \frac {(y^{(i)}-\boldsymbol x^{(i)T} \boldsymbol \theta)^2} {2 \sigma^2})
+$$
+&emsp;&emsp;对两边取以自然数为底数的对数有：
+$$
+\ln {L(\boldsymbol \theta)} = m \ln {\frac {1} {\sqrt {2 \pi} \sigma}} - \sum_{i=1}^m\frac {(y^{(i)}-\boldsymbol x^{(i)T} \boldsymbol \theta)^2} {2 \sigma^2}
+$$
+&emsp;&emsp;在上式中，$\sigma$ 是一个常数，因为他是样本的方差，样本确定后方差就确定了，$m$ 也是一个常数，所以 $\ln {L(\boldsymbol \theta)}$ 只受 $(y^{(i)}-\boldsymbol x^{(i)T} \boldsymbol \theta)^2$ 部分影响。我们希望我们的似然函数能取到最大值，即极大似然估计，因此我们希望 $-\frac {1} {2}\sum_{i=1}^m (y^{(i)}-\boldsymbol x^{(i)T} \boldsymbol \theta)^2$ 越大越好，即：
+$$
+\boldsymbol \theta = \arg {\boldsymbol \min_\theta \frac {1} {2} \sum_{i=1}^m (y^{(i)}-\boldsymbol x^{(i)T} \boldsymbol \theta)^2}
+$$
+&emsp;&emsp;由此，我们从概率论出发推导出了我们的求解目标，从中也可以得到我们的损失函数 $J(\boldsymbol \theta) = \frac {1} {2} \sum_{i=1}^m (y^{(i)}-\boldsymbol x^{(i)T} \boldsymbol \theta)^2$ 。 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
