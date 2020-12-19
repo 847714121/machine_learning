@@ -1,5 +1,6 @@
 import numpy as np
 import struct
+import matplotlib.pyplot as plt
 
 ###############################  start ###################################################
 #### 从同目录下的 dataset 中取出 Mnist 数据集部分内容
@@ -256,6 +257,10 @@ def add_col(X):
     ones = np.ones((m, 1))
     return np.hstack((ones, X))
 
+def plot_history(loss_history):
+    plt.plot(loss_history)
+    plt.show()
+
 class LogisticRegressionModel:
     def __init__(self, X, Y):
         (temp_X, self.X_mean, self.X_std) = normalization(X)
@@ -264,6 +269,7 @@ class LogisticRegressionModel:
         self.m, self.n = self.X_train.shape
         self.parameters = np.zeros((self.n, 1))
         self.learning_rate = 0.00003
+        self.lambd = 0.001
         self.iteration = 10000
         self.batchSize = 64
         self.seed = 0
@@ -276,7 +282,9 @@ class LogisticRegressionModel:
         self.accuracy = 0
         self.trainFlag = False
     
-    def modify_variables(self, learning_rate = None, iteration = None, method = None, batchSize = None, seed = None, printLossFlag = None, recordTimes = None, recordInterval = None, regularizationFlag = None):
+    def modify_variables(self, learning_rate = None, iteration = None, method = None,\
+                         batchSize = None, seed = None, printLossFlag = None,\
+                         recordTimes = None, recordInterval = None, regularizationFlag = None, lambd = None):
         if(learning_rate != None):
             self.learning_rate = learning_rate
         if(iteration != None):
@@ -300,16 +308,23 @@ class LogisticRegressionModel:
             self.recordInterval = recordInterval
         if(regularizationFlag != None):
             self.regularizationFlag = regularizationFlag
+        if(lambd != None):
+            self.lambd = lambd
         
     def hypothese(self, X, parameters):
         return sigmoid(np.dot(X, parameters))
     
     def cal_gred(self, X, sub, regularizationFlag = False):
-        gred = np.dot(X.T, sub)
+        regu = 0
+        if(regularizationFlag):
+            regu += self.lambd * self.parameters
+            regu[0] = 0
+        gred = np.dot(X.T, sub) + regu
         return gred
     
     def cal_loss(self, y, h, regularizationFlag = False):
-        loss = - np.dot(y.T, np.log(h + 1e-8)) - np.dot((1-y).T, np.log(1 - h + 1e-8))
+        loss = - np.dot(y.T, np.log(h + 1e-8)) - np.dot((1-y).T, np.log(1 - h + 1e-8)) + \
+        self.lambd * np.dot(self.parameters.T, self.parameters) / 2
         return loss
     
     def train(self):
@@ -366,6 +381,7 @@ class LogisticRegressionModel:
         pre = self.predict(X)
         accuracy = self._accuracy(pre, y)
         if(printLossFlag):
+            plot_history(loss_history)
             print("Accuracy: " + str(accuracy))
         self.accuracy = accuracy
         self.trainFlag = True

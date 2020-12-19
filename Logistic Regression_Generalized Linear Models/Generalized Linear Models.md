@@ -238,7 +238,29 @@ h_{\boldsymbol \theta}(\boldsymbol x) &= E[T(y)| \boldsymbol x;\boldsymbol \thet
 \end{aligned}
 $$
 
+#### 损失函数推导
 
+&emsp;&emsp;样本被采集到的概率 $L(\boldsymbol \theta)$ 为：
+$$
+L(\boldsymbol \theta) = \prod_{i = 1}^{m}p(y^{(i)}|\boldsymbol x^{(i)};\boldsymbol \theta)
+$$
+&emsp;&emsp;两边取对数有：
+$$
+\begin{aligned}
+\ln L(\boldsymbol \theta) &= \sum_{i=1}^m \ln p(y^{(i)}|\boldsymbol x^{(i)};\boldsymbol \theta)  \\
+&= \sum_{i=1}^m \sum_{k=1}^K 1 \cdot \{ y=k\} \ln \phi_k \\
+&= \sum_{i=1}^m \sum_{k=1}^K y_k\ln \phi_k
+\end{aligned}
+$$
+&emsp;&emsp;由极大似然估计可以，我们的目标是使 $L$ 最大，故：
+$$
+\boldsymbol \theta = \arg \max L(\boldsymbol \theta)
+$$
+&emsp;&emsp;所以损失函数 $J(\boldsymbol \theta)$ 为：
+$$
+J(\boldsymbol \theta) = -\sum_{i=1}^m \sum_{k=1}^K y_k\ln \phi_k
+$$
+&emsp;&emsp;这也被称为交叉熵。
 
 
 
